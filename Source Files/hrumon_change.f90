@@ -403,9 +403,21 @@
           if (iscen == 1) then                  !main.f90(163):      do iscen = 1, scenario                             
             select case (isproj)                !zeroini.f90(82):      isproj = 0
             case (0)
+                if(ioutput == 1) then
+                  !!output basic information
+                  call sqlite3_set_column( colhru(1), j )
+                  call sqlite3_set_column( colhru(2), cropname )
+                  call sqlite3_set_column( colhru(3), nmgt(j) )
+                  call sqlite3_set_column( colhru(4), iyr )
+                  call sqlite3_set_column( colhru(5), mo_chk )
+                  do ii = 1, ix
+                    call sqlite3_set_column( colhru(5 + ii), pdvs(ii))
+                  end do
+                  call sqlite3_insert_stmt( db, stmthru, colhru )
+                else 
             write (output_hru_num,1000) cropname, j, subnum(j), hruno(j), sb, nmgt(j), mo_chk, hru_km(j), (pdvs(ii), ii = 1, ix)
  1000 format (a4,i5,1x,a5,a4,i5,1x,i4,1x,i4,1x,e10.4,66f10.3,e10.3,e10.3,8f10.3,3f10.3,66f10.3,8f10.3)  
-
+                end if
       !      case (1)
         !    write (21,1000) cropname, j, subnum(j), hruno(j),           
     ! &         sb, nmgt(j), mo_chk, hru_km(j), (pdvs(ii), ii = 1, ix)

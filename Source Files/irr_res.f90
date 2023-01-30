@@ -152,10 +152,16 @@
               
               irramt(k) = vmm
             if (imgt == 1) then
+                !!~ ~ ~ SQLite ~ ~ ~
+            if(ioutput == 1) then
+                call mgt_sqlite(21,k)
+            else
              write (output_mgt_num, 1000) subnum(k), hruno(k), iyr, i_mo, iida, hru_km(k), "         ",  " AUTOIRR", phubase(k), phuacc(k),     &
                     sol_sw(k), bio_ms(k), sol_rsd(1,k),sol_sumno3(k),  sol_sumsolp(k), aird(k), irrsc(k), irrno(k)
-1000        format (a5,1x,a4,3i6,1x,e10.5,1x,2a15,7f10.2,10x,f10.2,70x, &
+1000                format (a5,1x,a4,3i6,1x,e10.5,1x,2a15,7f10.2,10x,f10.2,70x, &
 		i10,10x,i10) 
+            end if
+            !!~ ~ ~ SQLite ~ ~ ~
             end if
               !! subtract irrigation from reservoir volume
          !!     if (ipot(k) /= k) then

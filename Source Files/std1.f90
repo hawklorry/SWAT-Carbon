@@ -126,9 +126,15 @@
       if (icrk == 1) write (input_std_num,1110)    ! 1110 format (/t10,'Crack flow modeled')
 
 !!    standard output file
+      !!~~~ SQLite ~~~
+      if(ioutput == 1) then
+        !!do nothing
+      else
       write (output_std_num,1000) prog,values(2),values(3),values(1),values(5), values(6),values(7)
       write (output_std_num,1010) title
       write (output_std_num,1020) nbyr, da_km
+      end if
+      !!~~~ SQLite ~~~
       if (isproj == 1) then
         write (output2_std_num,1000) prog,values(2),values(3),values(1),values(5), values(6),values(7)
         write (output2_std_num,1010) title
@@ -142,8 +148,12 @@
                                        !t121,'sol.p(kg)',t133,'sol.pst(mg)',t145,'sor.pst(mg)')
 
 !!    chan.deg file
+      !!~ ~ ~ SQLite ~ ~ ~
+      if(ioutput == 0) then
       write (16,7000)                    !7000 format (/,' Initial Dimen',' Channel Dimensions ',/,' Reach',  '    Depth (m)','  Width (m)','  Slope (m/m)')
-
+      end if
+      !!~ ~ ~ SQLite ~ ~ ~
+      
       return
  1000 format ('1',/t5,a80,t105,2(i2,'/'),i4,5x,2(i2,':'),i2)
  1010 format (/(t5,20a4))

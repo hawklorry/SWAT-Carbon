@@ -59,7 +59,7 @@
 
             call plantop 
 
-            if (imgt == 1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1000) subnum(j), hruno(j), iyr, i_mo, iida,           &
              hru_km(j),cpnm(idplt(j))," PLANT", phubase(j), phuacc(j),          &
              sol_sw(j),bio_ms(j), sol_rsd(1,j),sol_sumno3(j),                   &
@@ -84,7 +84,7 @@
               call irrsub
             endif
             
-            if (imgt ==1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1002) subnum(j), hruno(j), iyr, i_mo,         &
              iida, hru_km(j), "        ",                               &
              "IRRIGATE", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),    &
@@ -103,7 +103,7 @@
             
             call fert
             
-            if (imgt ==1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1004) subnum(j), hruno(j), iyr, i_mo, iida,   &
              hru_km(j), fertnm(ifrttyp),                                &
              "   FERT", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),     &
@@ -121,7 +121,7 @@
             
             call apply
             
-            if (imgt ==1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1004) subnum(j), hruno(j), iyr, i_mo, iida,   &
              hru_km(j), pname(ipest),                                   &
              "   PEST", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),     &
@@ -137,7 +137,7 @@
             call harvkillop       
            
             
-            if (imgt ==1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1001) subnum(j), hruno(j), iyr, i_mo, iida,   &
              hru_km(j), cpnm(idplt(j)),                                 &
              "HARV/KILL", phubase(j), phuacc(j), sol_sw(j),biomass,     &
@@ -158,7 +158,7 @@
 
             call newtillmix(j,0.)
             
-            if (imgt ==1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1003) subnum(j), hruno(j),iyr, i_mo, iida,    &
              hru_km(j), tillnm(idtill),                                 &
              "tillage", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),     &
@@ -175,7 +175,7 @@
           
            
             
-            if (imgt == 1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1001) subnum(j), hruno(j), iyr, i_mo, iida,       &
              hru_km(j), cpnm(idplt(j)),                                     &
              "HARVEST ONLY", phubase(j), phuacc(j),sol_sw(j),bio_ms(j),     &
@@ -190,7 +190,7 @@
             
         
             
-            if (imgt == 1) then 
+            if (imgt == 1 .AND. ioutput == 0) then 
               write (output_mgt_num, 1000) subnum(j), hruno(j), iyr, i_mo, iida,   &
              hru_km(j), "         ",                                    &
              "    KILL", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),    &
@@ -216,7 +216,7 @@
            
             
             
-            if (imgt == 1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1005) subnum(j), hruno(j), iyr, i_mo, iida,       &
              hru_km(j), "         ",                                        &
              "   GRAZE", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),        &
@@ -240,7 +240,7 @@
             if (irr_mx(j) < 1.e-6) irr_mx(j) = 25.4
             if (irr_sca(j) <= 0) irr_sca(j) = irrsc(j)
             irra_flag(ihru) = 1
-          if (imgt ==1) then
+          if (imgt == 1 .AND. ioutput == 0) then
             write (output_mgt_num, 1010) subnum(j), hruno(j), iyr, i_mo,               &
            iida, hru_km(j), "        ",                                     &
            "SCHED AUTORR", phubase(j), phuacc(j), sol_sw(j), bio_ms(j),     &
@@ -284,7 +284,7 @@
             sweepeff = mgt4op(nop(j),j)
             fr_curb = mgt5op(nop(j),j)
             
-            if (imgt == 1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1000) subnum(j), hruno(j), iyr, i_mo, iida,       &
              hru_km(j), "         ",                                        &
              "STREET SWEEP",phubase(j), phuacc(j), sol_sw(j),bio_ms(j),     &
@@ -294,7 +294,7 @@
           case (13)    !! release/impound water in rice fields
             imp_trig(j) = mgt1iop(nop(j),j)
           
-            if (imgt == 1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1000) subnum(j), hruno(j), iyr, i_mo, iida,       &
              hru_km(j), "         ","RELEASE/IMPOUND", phubase(j),          &
              phuacc(j),sol_sw(j),bio_ms(j),sol_rsd(1,j),sol_sumno3(j),      &
@@ -322,7 +322,7 @@
           case (16)   !! burning
             burn_frlb = mgt4op(nop(j),j)
             call burnop
-            if (imgt == 1) then
+            if (imgt == 1 .AND. ioutput == 0) then
               write (output_mgt_num, 1000) subnum(j), hruno(j), iyr, i_mo, iida,   &
              hru_km(j), "         ",                                    &
              "      BURN", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),  &
@@ -336,6 +336,10 @@
             mgtyr_hru(j) = mgtyr_hru(j) + 1
           
       end select
+          
+      !!~ ~ ~ SQLite ~ ~ ~
+      if(ioutput == 1) call mgt_sqlite(mgtop(nop(j),j),j)
+      !!~ ~ ~ SQLite ~ ~ ~
       
       !if (mgtop(nop(j),j) /= 17) then 
         nop(j) = nop(j) + 1

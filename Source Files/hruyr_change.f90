@@ -421,11 +421,24 @@
         else
           cropname = "NOCR"
         endif
+        
+        if (ioutput == 1) then
+          !!output basic information
+          call sqlite3_set_column( colhru(1), j )
+          call sqlite3_set_column( colhru(2), cropname )
+          call sqlite3_set_column( colhru(3), nmgt(j) )
+          call sqlite3_set_column( colhru(4), iyr )
+        end if
 
-          if (iscen == 1 .and. isproj == 0) then        
+          if (iscen == 1 .and. isproj == 0) then       
+              if(ioutput == 1) then
+                  do ii = 1, itots
+                    call sqlite3_set_column(colhru(tblhru_num + ii), pdvs(ii))
+                  end do
+              else
           write (output_hru_num,1000) cropname, j, subnum(j), hruno(j), sb, nmgt(j), iyr, hru_km(j), (pdvs(ii), ii = 1, itots)
  1000 format (a4,i5,1x,a5,a4,i5,1x,i4,1x,i4,1x,e10.4,66f10.3,e10.3,e10.3,8f10.3,6f10.3,66f10.3,8f10.3)   
-
+             end if
       !     else if (isproj == 1) then
     !      write (21,1000) cropname, j, subnum(j), hruno(j),             
     ! &            sb, nmgt(j), iyr, hru_km(j), (pdvs(ii), ii = 1, itots)
@@ -435,8 +448,14 @@
           endif
         else
          if (iscen == 1 .and. isproj == 0) then
+            if(ioutput == 1) then
+                do ii = 1, mhruo
+                    call sqlite3_set_column(colhru(tblhru_num + ii),pdvas(ii))
+                end do                
+            else
          write (output_hru_num,1001) cropname, j, subnum(j), hruno(j), sb, nmgt(j), iyr, hru_km(j), (pdvas(ii), ii = 1, mhruo)
  1001 format (a4,i7,1x,a5,a4,i5,1x,i4,1x,i4,e10.5,66f10.3,1x,e10.5,1x,e10.5,3e10.3,6f10.3,1x,i4,66f10.3)    
+            end if
     !      else if (isproj == 1) then
       !     write (21,1001) cropname, j, subnum(j), hruno(j),             
     ! &           sb, nmgt(j), iyr, hru_km(j), (pdvas(ii), ii = 1, mhruo)
@@ -445,6 +464,10 @@
       ! &    nmgt(j), iyr, hru_km(j), (pdvas(ii), ii = 1, mhruo), iyr
           endif
         end if
+        end if
+        
+        if(ioutput == 1) then
+            call sqlite3_insert_stmt( db, stmthru, colhru )
         end if
       end do
 

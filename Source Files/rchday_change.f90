@@ -213,6 +213,20 @@
 
       
         call xmon 
+        
+        !~~~ SQLite ~~~
+        if(ioutput == 1) then
+            call sqlite3_set_column( colrch(1), j )
+            if (icalen == 0) then
+                call sqlite3_set_column( colrch(2), iyr )
+                call sqlite3_set_column( colrch(3), iida )
+            else if(icalen == 1) then
+                call sqlite3_set_column( colrch(2), iyr )
+                call sqlite3_set_column( colrch(3), i_mo )
+                call sqlite3_set_column( colrch(4), icl(iida) )
+            end if
+        end if
+        !~~~ SQLite ~~~
 
       if (ievent_rch==1.and.iprint==3) then    ! print out subdaily reach output in output.rch
 	 
@@ -238,22 +252,40 @@
           do ii = 1, itotr
             pdvr(ii) = pdvar(ipdvar(ii))
           end do
-          if (iscen == 1 .and. isproj == 0) then
+          
+          if(ioutput ==1) then
+                  !~~~ SQLite ~~~
+                 do ii=1, itotr
+                   call sqlite3_set_column(colrch(tblrch_num+ii),pdvr(ii))
+                 end do
+                 !~~~ SQLite ~~~
+          else          
+          if (iscen == 1 .and. isproj == 0) then             
+                  
                 if (icalen == 0) write (output_rch_num,5000) j, subgis(j), iida, rch_dakm(j), (pdvr(ii), ii = 1, itotr)             !!-----------------------used----------------------------------
                   
                 if(icalen == 1) write (output_rch_num,5002) j, subgis(j), i_mo, icl(iida), iyr, rch_dakm(j), (pdvr(ii), ii = 1, itotr)
 !!    added for binary files 3/25/09 gsm line below and write (77777
 	            if (ia_b == 1) then
                     write (outputb_rch_num) j, subgis(j), iida, rch_dakm(j), (pdvr(ii), ii = 1, itotr)
-                endif	        
+                endif     
+            
           else if (isproj == 1) then
                 write (20,5000) j, subgis(j), iida, rch_dakm(j), (pdvr(ii), ii = 1, itotr)
           else if (iscen == 1 .and. isproj == 2) then
                 if(icalen == 0) write (output_rch_num,6000) j, subgis(j), iida, rch_dakm(j), (pdvr(ii), ii = 1, itotr),iyr 
                 if (icalen == 1) write (output_rch_num,6002) j, subgis(j), i_mo, icl(iida), iyr, rch_dakm(j),(pdvr(ii), ii = 1, itotr), iyr
           endif
+          end if
         else
         
+            if(ioutput ==1) then
+                  !~~~ SQLite ~~~
+                 do ii=1, 45
+                   call sqlite3_set_column(colrch(tblrch_num+ii),pdvr(ii))
+                 end do
+                 !~~~ SQLite ~~~
+              else
   !  increase to 45 in loops below from 42 gsm 10/26/2011      
             if (iscen == 1 .and. isproj == 0) then
               if (icalen == 0) write(output_rch_num,5000) j, subgis(j), iida, rch_dakm(j), (pdvar(ii), ii = 1, 45)                           !--------------------USED-----------------------
@@ -271,9 +303,17 @@
                 if (icalen == 0) write(output_rch_num,6000) j, subgis(j), iida, rch_dakm(j), (pdvar(ii), ii = 1, 45), iyr 
                 if (icalen == 1) write (output_rch_num,6002) j, subgis(j), i_mo, icl(iida), iyr, rch_dakm(j), (pdvar(ii), ii = 1, 45)
             endif
+            end if
         end if  !if (ipdvar(1) > 0) then
         
       endif     !if (iscen == 1 .and. isproj == 0) then
+      
+      !~~~ SQLite ~~~
+      if(ioutput == 1) then
+        call sqlite3_insert_stmt( db, stmtrch, colrch )
+      end if
+      !~~~ SQLite ~~~
+      
       end do    !do j = 1, subtot
       return
 

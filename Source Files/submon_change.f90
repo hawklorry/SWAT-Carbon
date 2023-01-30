@@ -170,13 +170,34 @@
        pdvab(66) = submono(62,sb)  
     
        
+       if(ioutput == 1) then
+            call sqlite3_set_column( colsub(1), sb )
+            call sqlite3_set_column( colsub(2), iyr )
+            call sqlite3_set_column( colsub(3), mo_chk )
+       end if
+       
         if (ipdvab(1) > 0) then
           do ii = 1, itotb
             pdvb(ii) = pdvab(ipdvab(ii))
           end do
+          if(ioutput == 1) then
+              do ii=1, itotb
+                call sqlite3_set_column(colsub(3+ii),pdvb(ii))
+              end do
+          else
           write (output_sub_num,1000) sb, subgis(sb), mo_chk, sub_km(sb), (pdvb(ii), ii = 1, itotb)
+          end if
         else
+          if(ioutput == 1) then
+            do ii=1, msubo
+                call sqlite3_set_column(colsub(3+ii),pdvab(ii))
+            end do
+           else
           write (output_sub_num,1000) sb, subgis(sb), mo_chk, sub_km(sb), (pdvab(ii), ii = 1, msubo)
+          end if
+        end if
+        if(ioutput == 1) then
+            call sqlite3_insert_stmt( db, stmtsub, colsub )
         end if
       end do
 

@@ -285,6 +285,10 @@
 !!Special Projects input
       read (file_cio2_num,5101) titldum
       read (file_cio2_num,*) isproj
+      !!~~~ SQLite ~~~
+      !!ignore other project type
+      isproj = 0
+      !!~~~ SQLite ~~~
       read (file_cio2_num,*) iclb
       read (file_cio2_num,5000) calfile
 
@@ -498,13 +502,17 @@
       isol = 0
       read (file_cio2_num,*,iostat=eof) isol  
       if (isol == 1) then
+          !!~ ~ ~ SQLite ~ ~ ~
+        if(ioutput == 0) then
          open (output_snu_num,file='output.snu')
          write (output_snu_num,12222) 
-12222   format (t25,'SURFACE',t39,'-------  SOIL PROFILE  -------',/,       &
+12222    format (t25,'SURFACE',t39,'-------  SOIL PROFILE  -------',/,       &
        t8,'DAY',t15,'GISnum',t25,'SOL_RSD',t37,'SOL_P',t48,                 &
        'NO3',t57,'ORG_N',t67,'ORG_P',t80,'CN'/,t26,                         &
        '(t/ha)',t35,'(kg/ha)',t45,                                          &
        '(kg/ha)',t55,'(kg/ha)',t66,'(kg/ha)')
+         end if
+        !!~ ~ ~ SQLite ~ ~ ~
       end if  
 !! headwater code (0=do not route; 1=route)
       i_subhw = 0
@@ -607,6 +615,15 @@
       end if
 
       !!Open output files
+      !!~~~ SQLite ~~~
+      !!Only put parts of the results into sqlite database
+      if(ioutput == 1) then
+          !!output hru, sub, rch, sed, rsv into sqlite database
+          open (input_std_num,file="input.std")
+          !!Ignore binary output for hru, sub and rch
+          ia_b = 0
+          open (output_pst_num,file="output.pes",recl=600)      !!R682 10/20/21 nbs
+      else
       open (input_std_num,file="input.std")
       open (output_std_num,file="output.std")
 
@@ -636,7 +653,9 @@
      'SMAG_OUTtons',t160,'LAG_INtons',t171,'LAG_OUTtons',t184,         &
      'GRA_INtons',t195,'GRA_OUTtons',t208,'CH_BNKtons',t220,           &
      'CH_BEDtons',t232,'CH_DEPtons',t244,'FP_DEPtons',t259,'TSSmg/L')
-     
+      end if
+      !!~~~ SQLite ~~~
+      
       ! Jaehak, sedimentation-filtration output
       open (bmp_sedfil_out_num,file = "bmp-sedfil.out") !jaehak temp urban print out
       write(bmp_sedfil_out_num,'(a46)') 'Sed-Fil Basins Configuration'   
@@ -675,16 +694,20 @@
       open (rsv_dat_num,file='rsv.dat')
 !!darrell output files added for interface plotting
       open (hyd_out_num,file='hyd.out')
-      open (chan_deg_num,file='chan.deg')
+      if(ioutput == 0) open (chan_deg_num,file='chan.deg')
 !!    open (wbl_out_num,file='wbl.out')
       open (swat_qst_num,file='swat.qst')
 !! output amount of water stored in the soil layer (formerly 'soilst.out')
       if (isto > 0) then
+          !!~ ~ ~ SQLite ~ ~ ~
+        if(ioutput == 0) then
         open (output_swr_num,file='output.swr')
         write (output_swr_num,5001) 
 5001    format (t20,'Soil Storage (mm)',/,t25,'Layer #',/,t3,'Day',t9,      &
        'HRU',t19,'GIS',t34,'1',t46,'2',t58,'3',t70,'4',t82,'5',t93,'6',     &
        t106,'7',t118,'8',t130,'9',t141,'10')
+        end if
+        !!~ ~ ~ SQLite ~ ~ ~
       end if
 
 
@@ -702,8 +725,15 @@
 !  0=no print 1=print
       read (file_cio2_num, *,iostat=eof) imgt
 	if (imgt==1) then
+        !!~ ~ ~ SQLite ~ ~ ~
+	    if(ioutput == 1) then
+	        !!do nothing, the mgt table structure would be created in subroutine
+	        !!headout_sqlite_mgt
+	    else
          open (output_mgt_num, file="output.mgt", recl=600)
          write (output_mgt_num,999)
+         end if
+         !!~ ~ ~ SQLite ~ ~ ~
 999      format(2x,'Sub',2x,'Hru',2x,'Year',3x,'Mon',3x,'Day',                  &
       '   AREAkm2', 3x,'crop/fert/pest', 4x,                                    &
       'Operation',4x,'phubase',3x,'phuacc',4x,'sol_sw',4x,'bio_ms',3x,          &
@@ -730,10 +760,17 @@
 ! 0 =no print  1 =print
       read (file_cio2_num,*,iostat=eof) iwtr
         if (iwtr == 1) then
+          !!~~~ SQLite ~~~
+          if(ioutput == 1) then
+              !!do nothing, output.wtr and output.pot would be write in
+              !!SQLite database
+          else
           open (output_wtr_num,file="output.wtr",recl=800)
 ! write statement added for Aziz (06/25/09)
           open (output_pot_num,file='output.pot')
           write (output_pot_num, 1000) 
+          end if
+          !!~~~ SQLite ~~~
         end if
         
  1000  format (1x,'SUB',t6,'HRU',t12,'DAY',t17,'YEAR',t26,'VOL-I',t37,      &
@@ -746,7 +783,15 @@
 !     icalen = 0 (print julian day) 1 (print month/day/year) 
       read (file_cio2_num,*, iostat=eof) icalen
 !!!!! if icalen == 1 (print month/day/year) - force iprint to be daily  <--nubz asked srin 06/11/2012
-      if (icalen == 1) iprint = 1
+!      if (icalen == 1) iprint = 1
+      !!~~~ SQLite ~~~
+      !!force to use normal calender output for daily output
+      if (iprint == 1) then
+        icalen = 1
+      else
+        icalen = 0
+      end if
+      !!~~~ SQLite ~~~
       
       if (isproj == 1) then 
         open (output2_std_num,file="output2.std")

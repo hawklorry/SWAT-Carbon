@@ -21,6 +21,10 @@
       implicit none
  
 !!    standard output file
+     !!~~~ SQLite ~~~
+      if(ioutput == 1) then
+        !!do nothing
+      else
       if (iscen == 1) then
         write (output_std_num,1000) prog
         write (output_std_num,1100) title
@@ -32,6 +36,8 @@
         write (output2_std_num,1200) curyr
         write (output2_std_num,1300)
       endif
+      end if
+      !!~~~ SQLite ~~~
 
       return
  1000 format ('1',/t5,a80,t105,2(a2,'/'),a2,5x,2(i2,':'),i2)

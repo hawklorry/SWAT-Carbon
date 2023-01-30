@@ -133,7 +133,7 @@
       use parm
       implicit none
 
-      integer :: j, sb, ii, iflag
+      integer :: j, sb, ii, iflag, icl
       real :: orgn_ppm, orgp_ppm, ano3_ppm, minp_ppm, chla_ppm
       real :: orgn_ppw, orgp_ppw, ano3_ppw, solp_ppw, chla_ppw, cnv
       real, dimension (40) :: pdvas
@@ -234,8 +234,23 @@
       end if
 
         if (iwtr == 1) then
+            if(ioutput == 1) then
+                !!~~~ SQLite ~~~
+                call sqlite3_set_column( colwtr(1), j )
+                call sqlite3_set_column( colwtr(2), cropname )
+                call sqlite3_set_column( colwtr(3), nmgt(j) )
+                call sqlite3_set_column( colwtr(4), iyr )
+                call sqlite3_set_column( colwtr(5), i_mo )
+                call sqlite3_set_column( colwtr(6), icl(iida) )
+                do ii=1,40
+                    call sqlite3_set_column( colwtr(6+ii), pdvas(ii) )
+                end do
+                call sqlite3_insert_stmt( db, stmtwtr, colwtr )
+                !!~~~ SQLite ~~~
+            else
           write (output_wtr_num,1000) cropname, j, subnum(j), hruno(j), sb,  &
 	  		nmgt(j), iida, hru_km(j), (pdvas(ii), ii = 1, 40)
+            end if
         end if
       end if
 

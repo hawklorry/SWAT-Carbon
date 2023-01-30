@@ -446,9 +446,15 @@
           endif
 		 
           if (iprint==3) then
+              !!~~~ SQLite ~~~
+            if(ioutput == 1) then
+                !!do nothing
+            else
 		  write (output_pot_num,2000)i,j,curyr,k,pot_vol(j),potsa(j),spillo,potsep,   &
             potev,sol_sw(j),potpcpmm,potflwi(j) / cnv,                      &
             potsedi(j) / hru_ha(j),potflow,potsedo / hru_ha(j)
+          end if
+            !!~~~ SQLite ~~~
           endif
 		  
         if (pot_vol(j) > 1.e-6) then

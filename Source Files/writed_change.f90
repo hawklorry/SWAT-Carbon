@@ -107,7 +107,7 @@
         use parm_output
       implicit none
       
-      integer :: j, k, j1
+      integer :: j, k, j1, icl
       real :: pstsum
 
 
@@ -115,25 +115,68 @@
 !!    writes out the amount of water stored in the soil layer
       if (isto > 0) then 
         do j = 1, nhru
+            !!~ ~ ~ SQLite ~ ~ ~
+            if(ioutput == 1) then
+                call sqlite3_set_column( colswr(1), j )
+                call sqlite3_set_column( colswr(2), iyr )
+                call sqlite3_set_column( colswr(3), i_mo )
+                call sqlite3_set_column( colswr(4), icl(iida) )
+                do j1 = 1, 10
+                    if(j1 > sol_nly(j)) then
+                      call sqlite3_set_column(colswr(4+j1),0.0)
+                    else
+                      call sqlite3_set_column(colswr(4+j1),sol_st(j1,j))
+                    end if
+                end do
+                call sqlite3_insert_stmt( db, stmtswr, colswr )
+            else
           write (output_swr_num,5000) iida, j, subnum(j), hruno(j), (sol_st(j1,j), &
 	  	j1 = 1, sol_nly(j))
         write (129,5000) iida, j, subnum(j), hruno(j), (sol_st(j1,j),  &   !!R664 02/15/17  nbs
                j1 = 1, sol_nly(j))
 !          write (129,5000) iida, subnum(j), hruno(j),                   
 !     &             (sol_no3(j1,j), j1 = 1, sol_nly(j))
+        end if
+            !!~ ~ ~ SQLite ~ ~ ~
         enddo
       end if
 
 
       if (iprint == 1.or.iprint==3) then
         if (da_ha < 1.e-9) then
-	    call rchday
+        call rchday
 	    call rseday
 	    return
-	  end if
+        end if
 
 
         !! daily write to output.std
+        !!~~~ SQLite ~~~
+          if(ioutput == 1) then
+            call sqlite3_set_column(colwshd_dy(1),iyr)
+            call sqlite3_set_column(colwshd_dy(2),i_mo)
+            call sqlite3_set_column(colwshd_dy(3),icl(iida))
+            call sqlite3_set_column(colwshd_dy(4),wshddayo(1))
+            call sqlite3_set_column(colwshd_dy(5),wshddayo(3))
+            call sqlite3_set_column(colwshd_dy(6),wshddayo(4))
+            call sqlite3_set_column(colwshd_dy(7),wshddayo(104))
+            call sqlite3_set_column(colwshd_dy(8),wshddayo(5))
+            call sqlite3_set_column(colwshd_dy(9),wshddayo(109))
+            call sqlite3_set_column(colwshd_dy(10),wshddayo(35))
+            call sqlite3_set_column(colwshd_dy(11),wshddayo(7))
+            call sqlite3_set_column(colwshd_dy(12),wshddayo(108))
+            call sqlite3_set_column(colwshd_dy(13),wshddayo(6))
+            call sqlite3_set_column(colwshd_dy(14),wshddayo(12)/da_ha)
+            call sqlite3_set_column(colwshd_dy(15),wshddayo(42))
+            call sqlite3_set_column(colwshd_dy(16),wshddayo(45))
+            call sqlite3_set_column(colwshd_dy(17),wshddayo(46))
+            call sqlite3_set_column(colwshd_dy(18),wshddayo(44))
+            call sqlite3_set_column(colwshd_dy(19),wshddayo(40))
+            call sqlite3_set_column(colwshd_dy(20),wshddayo(43))
+            call sqlite3_set_column(colwshd_dy(21),wshddayo(41))
+            call sqlite3_set_column(colwshd_dy(22),wshddayo(111))
+            call sqlite3_insert( db, tblwshd_dy, colwshd_dy )
+          else
         if (iscen == 1) then
         write (output_std_num,6200) iida, wshddayo(1), wshddayo(3), wshddayo(4),    &
                       wshddayo(104), wshddayo(5), wshddayo(109),       &
@@ -151,6 +194,8 @@
                       wshddayo(40), wshddayo(43), wshddayo(41)
          
         endif
+        endif
+        !!~~~ SQLite ~~~
    
         !! daily write to pesticide output file (output.pes) for HRUs
         do j = 1, nhru

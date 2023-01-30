@@ -23,7 +23,7 @@
       use parm_subC
       implicit none
       
-      integer :: j, l
+      integer :: j, l, icl
       real :: solp_t, solno3_t, solorgn_t, solorgp_t
 
       do j = 1,nhru
@@ -59,8 +59,26 @@
 		   
            solorgp_t = solorgp_t + sol_orgp(l,j)
          end do
+         
+         !!~ ~ ~ SQLite ~ ~ ~
+         if(ioutput == 1) then
+            !!save to SQLite database
+            call sqlite3_set_column( colsnu(1), j )
+            call sqlite3_set_column( colsnu(2), iyr )
+            call sqlite3_set_column( colsnu(3), i_mo )
+            call sqlite3_set_column( colsnu(4), icl(iida) )
+            call sqlite3_set_column( colsnu(5), sol_rsd(1,j) )
+            call sqlite3_set_column( colsnu(6), solp_t )
+            call sqlite3_set_column( colsnu(7), solno3_t )
+            call sqlite3_set_column( colsnu(8), solorgn_t )
+            call sqlite3_set_column( colsnu(9), solorgp_t )
+            call sqlite3_set_column( colsnu(10), cnday(j) )
+            call sqlite3_insert_stmt( db, stmtsnu, colsnu )
+         else         
          write (output_snu_num,1000) i, subnum(j), hruno(j), sol_rsd(1,j), solp_t, &
 	 		 solno3_t, solorgn_t, solorgp_t, cnday(j)
+         end if
+         !!~ ~ ~ SQLite ~ ~ ~
       end do
       
       return

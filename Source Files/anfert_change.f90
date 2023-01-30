@@ -407,11 +407,17 @@
         end if
         
         if (imgt == 1) then
+            !!~ ~ ~ SQLite ~ ~ ~
+            if(ioutput == 1) then
+                call mgt_sqlite(22,j)
+            else
               write (output_mgt_num, 1000) subnum(j), hruno(j), iyr, i_mo, iida,       &
              hru_km(j), "         ",                                        &
              "AUTOFERT", phubase(j), phuacc(j), sol_sw(j),bio_ms(j),        &
              sol_rsd(1,j),sol_sumno3(j),sol_sumsolp(j), dwfert,             &
-             fertno3, fertnh4, fertorgn, fertsolp, fertorgp            
+             fertno3, fertnh4, fertorgn, fertsolp, fertorgp
+            end if
+            !!~ ~ ~ SQLite ~ ~ ~
         end if
       
       endif

@@ -223,12 +223,27 @@
         pdvar(59) = rchmono(64,j)+rchmono(66,j) + rchmono(68,j)+rchmono(70,j) !!Total DOC out (kg C)   £¡£¡63
       !----finish assiging monthly output values for carbon module,added by Du------!
        
-      
+        !~~~ SQLite ~~~
+        if(ioutput ==1) then            
+            call sqlite3_set_column( colrch(1), j )
+            call sqlite3_set_column( colrch(2), iyr )
+            call sqlite3_set_column( colrch(3), mo_chk )
+        end if
+        !~~~ SQLite ~~~
+        
         if (ipdvar(1) > 0) then
           do ii = 1, itotr
             pdvr(ii) = pdvar(ipdvar(ii))
           end do
 
+          if(ioutput ==1) then
+               !~~~ SQLite ~~~
+               do ii=1, itotr
+                    call sqlite3_set_column(colrch(3+ii),pdvr(ii))
+               end do
+               !~~~ SQLite ~~~
+           else
+          
           if (iscen == 1 .and. isproj == 0) then
           write (output_rch_num,5000) j, subgis(j), mo_chk, rch_dakm(j),      &       !!-------------------used
                                          (pdvr(ii), ii = 1, itotr)
@@ -239,7 +254,15 @@
           write (output_rch_num,6000) j, subgis(j), mo_chk, rch_dakm(j),  &
 	  			(pdvr(ii), ii = 1, itotr),iyr  
           endif
+          endif
         else
+            if(ioutput ==1) then
+               !~~~ SQLite ~~~
+               do ii=1, 44
+                    call sqlite3_set_column(colrch(3+ii),pdvar(ii))
+               end do
+               !~~~ SQLite ~~~
+            else
  !  increase to 44 in loops below from 42 gsm 10/17/2011      
           if (iscen == 1 .and. isproj == 0) then
           write (output_rch_num,5000) j, subgis(j), mo_chk, rch_dakm(j),  	&               !!-------------------used   
@@ -252,7 +275,14 @@
 	  				(pdvar(ii), ii = 1, 44), iyr     
 
           endif
+          end if
         end if
+        
+          !~~~ SQLite ~~~
+          if(ioutput == 1) then
+            call sqlite3_insert_stmt( db, stmtrch, colrch )
+          end if
+          !~~~ SQLite ~~~
       end do
 
       return

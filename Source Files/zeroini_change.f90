@@ -281,6 +281,9 @@
       tillage_days = 0
 !!    added by zhang for CSWAT == 2
 
-
+      !!~~~ SQLite ~~~
+      !!SQLite Output
+      ioutput = 1 !!default is SQLite output, used to test
+      sq_indexnum = 0 !!number of index = 0
       return
       end

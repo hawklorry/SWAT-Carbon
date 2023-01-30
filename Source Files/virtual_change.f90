@@ -288,8 +288,14 @@
       !if ((iprint==1.or.iprint==3) .and. curyr > nyskip) call hruday_N   
       !if ((iprint==1.or.iprint==3) .and. curyr > nyskip) call hruday_P    
       !if ((iprint==1.or.iprint==3) .and. curyr > nyskip) call hruday_E  
-      if ((iprint==1.or.iprint==3) .and. curyr > nyskip) call hruday
-      if ((iprint==1.or.iprint==3) .and. curyr > nyskip) call impndday
+!      if ((iprint==1.or.iprint==3) .and. curyr > nyskip) call hruday
+!      if ((iprint==1.or.iprint==3) .and. curyr > nyskip) call impndday
+      !!~~~ SQLite ~~~
+      if ((iprint==1.or.iprint==3) .and. curyr > nyskip) then
+        call hruday
+        call impndday
+      end if
+      !!~~~ SQLite ~~~
      
 !! $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$   sum HRU results for subbasin   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 if (sb > 0) then

@@ -220,10 +220,28 @@
         pdvar(58) = rchyro(68,j)+rchyro(70,j) !!Total DOC out (kg C)
         pdvar(59) = rchyro(64,j)+rchyro(66,j) + rchyro(68,j)+rchyro(70,j) !!Total DOC out (kg C)
       !----finish assigning yearly output values for carbon module,added by Du-----!
+        
+        
+        !~~~ SQLite ~~~
+        if(ioutput ==1) then            
+             call sqlite3_set_column( colrch(1), j )
+            call sqlite3_set_column( colrch(2), iyr )
+        end if
+        !~~~ SQLite ~~~
+        
          if (ipdvar(1) > 0) then
           do ii = 1, itotr
             pdvr(ii) = pdvar(ipdvar(ii))
           end do
+          
+          if(ioutput ==1) then
+               !~~~ SQLite ~~~
+               do ii=1, itotr
+                    call sqlite3_set_column(colrch(2+ii),pdvr(ii))
+               end do
+               !~~~ SQLite ~~~
+           else         
+          
           if (iscen == 1 .and. isproj == 0) then                                             !!-------------------------USED-
           write (output_rch_num,5000) j, subgis(j), iyr, rch_dakm(j),  &
 	  			(pdvr(ii), ii = 1, itotr)
@@ -234,8 +252,16 @@
           write (output_rch_num,6000) j, subgis(j), iyr, rch_dakm(j),  &
 	  			(pdvr(ii), ii = 1, itotr), iyr 
           endif
-        else
+          endif
+         else
      !!  increase to 44 in loops below from 42 gsm 10/17/2011
+            if(ioutput ==1) then
+               !~~~ SQLite ~~~
+               do ii=1, 44
+                 call sqlite3_set_column(colrch(2+ii),pdvar(ii))
+               end do
+               !~~~ SQLite ~~~
+           else  
           if (iscen == 1 .and. isproj == 0) then
           write (output_rch_num,5000) j, subgis(j), iyr, rch_dakm(j),       &              !!-------------------------USED-
                                      (pdvar(ii), ii = 1, 44)    
@@ -247,7 +273,13 @@
 	  			(pdvar(ii), ii = 1, 44), iyr     
      
           endif
-        end if
+          endif
+         end if
+         !~~~ SQLite ~~~
+          if(ioutput == 1) then
+            call sqlite3_insert_stmt( db, stmtrch, colrch )
+          end if
+          !~~~ SQLite ~~~
       end do
 
       return

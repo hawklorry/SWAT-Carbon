@@ -130,9 +130,18 @@
       call readinpt
       
       call std1
-      call std2  
+      !!call std2  
       if (iwea==0) call openwth    
-      call headout
+      
+      !!~ ~ ~ SQLITE ~ ~ ~
+      if(ioutput == 1) then
+        call headoutsqlite
+      else
+        call headout
+      end if
+      call std2
+      !!~ ~ ~ SQLITE ~ ~ ~
+      
       !call sw_init                      !!R673 8/16/19 nbs (new subroutine)
       call headout_S          !! subbasin output head
       call headout_R          !! reach output head
@@ -175,6 +184,11 @@
         !!reinitialize for new scenario
         if (scenario > iscen) call rewind_init
       end do
+      
+      !!~ ~ ~ SQLite ~ ~ ~
+      call sqlite_finalize
+      !!~ ~ ~ SQLite ~ ~ ~
+      
          end if
       do i = 101, 109       !Claire 12/2/09: change 1, 9  to 101, 109.
         close (i)

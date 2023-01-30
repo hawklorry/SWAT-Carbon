@@ -190,7 +190,7 @@
         use parm_output
       IMPLICIT  NONE
 
-      integer :: j, sb, ii, iflag, k, idplant, LIG, NONLIG
+      integer :: j, sb, ii, iflag, k, idplant, LIG, NONLIG,icl
       real, dimension (mhruo) :: pdvas, pdvs
       character (len=4) :: cropname
       real::    sumorgtc, no3_loss
@@ -540,8 +540,31 @@
         cropname = "NOCR"
       endif
       
+      if(ioutput == 1) then
+          !!output basic information
+          call sqlite3_set_column( colhru(1), j )
+          call sqlite3_set_column( colhru(2), cropname )
+          call sqlite3_set_column( colhru(3), nmgt(j) )
+          if (icalen == 0) then
+            call sqlite3_set_column( colhru(4), iyr )
+            call sqlite3_set_column( colhru(5), iida )
+          else if (icalen == 1) then
+            call sqlite3_set_column( colhru(4), iyr )
+            call sqlite3_set_column( colhru(5), i_mo )
+            call sqlite3_set_column( colhru(6), icl(iida) )
+          end if
+      end if
+      
       if (iscen == 1 .and. isproj == 0) then
-        if (icalen == 0) write (output_hru_num,1001) cropname, j, subnum(j), hruno(j), sb, nmgt(j), iida, hru_km(j), (pdvs(ii), ii = 1, itots)
+        if (icalen == 0) then
+            if(ioutput == 1) then
+                do ii = 1, itots
+                    call sqlite3_set_column( colhru(tblhru_num + ii), pdvs(ii))
+                end do
+            else
+                write (output_hru_num,1001) cropname, j, subnum(j), hruno(j), sb, nmgt(j), iida, hru_km(j), (pdvs(ii), ii = 1, itots)
+            end if
+        end if
 !        if (icalen == 0) write (output_hru_num,1001) cropname, j, subnum(j),        &
 !     &      hruno(j), sb, nmgt(j), iida, hru_km(j),                     &
 !     &       (pdvs(ii), ii = 1, itots)
@@ -568,8 +591,16 @@
         end if
       else
         if (iscen == 1 .and. isproj == 0) then
-        if(icalen == 0)write (output_hru_num,1000) cropname, j, subnum(j), hruno(j),&
+        if(icalen == 0) then
+            if(ioutput == 1) then
+                do ii = 1, mhruo
+                    call sqlite3_set_column( colhru(tblhru_num + ii), pdvas(ii))
+                end do
+            else
+            write (output_hru_num,1000) cropname, j, subnum(j), hruno(j),&
      &        sb,nmgt(j), iida, hru_km(j), (pdvas(ii), ii = 1, mhruo)
+            end if
+        end if
    !     if(icalen == 1)write (output_hru_num,1003) cropname, j, subnum(j), hruno(j),&
     ! &        sb,nmgt(j), i_mo, icl(iida), iyr, hru_km(j),              &
    !  &        (pdvas(ii), ii = 1, mhruo)
@@ -589,7 +620,11 @@
     ! &      sb,nmgt(j), i_mo, icl(iida), iyr, hru_km(j),                &
     ! &      (pdvas(ii), ii = 1, mhruo), iyr
         end if
-      end if
+    end if
+    
+    if(ioutput == 1) then
+        call sqlite3_insert_stmt( db, stmthru, colhru )
+    end if
 
       !!add by zhang
       !!output carbon related variables

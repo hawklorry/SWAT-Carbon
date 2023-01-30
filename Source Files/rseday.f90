@@ -27,11 +27,27 @@
       use parm
       implicit none
 
-      integer :: j, ii
+      integer :: j, ii, icl
 
       do j = 1, subtot
+          !!~ ~ ~ SQLITE ~ ~ ~
+          if(ioutput == 1) then
+            !!use calender day format by default
+            call sqlite3_set_column( colsed(1), j )
+            call sqlite3_set_column( colsed(2), iyr )
+            call sqlite3_set_column( colsed(3), i_mo )
+            call sqlite3_set_column( colsed(4), icl(iida) )
+            call sqlite3_set_column( colsed(5), rchdy(5,j) )
+            call sqlite3_set_column( colsed(6), rchdy(6,j) )
+            do ii = 43,59
+                call sqlite3_set_column( colsed(ii-36), rchdy(ii,j) )
+            end do
+            call sqlite3_insert_stmt( db, stmtsed, colsed )
+          else
           write (output_sed_num,5000) j, subgis(j), iida, rch_dakm(j), rchdy(5,j), rchdy(6,j),(rchdy(ii,j),ii=43,59)
-	end do
+	      end if
+          !!~ ~ ~ SQLITE ~ ~ ~
+    end do
 
       return
  5000 format ('REACH ',i6,1x,i8,1x,i5,20e12.4)          !!R682 10/20/21 nbs
