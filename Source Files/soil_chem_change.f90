@@ -363,7 +363,7 @@
             
    
        sol_WOC(j,i) = sol_mass * sol_cbn(j,i)/100.                   
-       !sol_WON(j,i) = 1./10. * sol_WOC(j,i)  
+       sol_WON(j,i) = 1./10. * sol_WOC(j,i)  
         !Frction of Mirobial Biomass, Humus Passive C pools
         FBM = 0.0
         FHP = 0.0
