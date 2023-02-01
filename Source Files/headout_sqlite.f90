@@ -53,7 +53,7 @@
 
       use parm
       integer :: stat
-      character(len=22) :: rfilename
+      character(len=24) :: rfilename
 
       datecol_num = 1                    !!yearly
       if(iprint == 1) datecol_num = 3    !!daily

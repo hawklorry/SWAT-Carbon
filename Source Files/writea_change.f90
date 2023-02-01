@@ -337,6 +337,9 @@
 
                   !! annual write--subbasin output (output.sub)
                   call subyr
+                  
+                  !! annual write--reach output (.rch)
+                  call rchyr
 
                   !! annual write--sediment routing (.sed)
                   call rsedyr
@@ -352,14 +355,15 @@
           !! annual write--subbasin output (output.sub)
           call subyr
 
+          !! annual write--reach output (.rch)
+          call rchyr
           
        !    if(cswat == 2 .and.  rch2==1) call rchyr2                 !!output2.rch-------------------------------
           !  if(cswat == 2 .and.  rch3==1) call rchyr3                 !!output3.rch-------------------------------
    !! annual write--sediment routing (.sed)
           call rsedyr
           end if
-          !! annual write--reach output (.rch)
-          call rchyr
+          
           
           !!~ ~ ~ SQLite ~ ~ ~
 
