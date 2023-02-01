@@ -24,7 +24,7 @@
 				<Tool Name="VFPreBuildEventTool"/>
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
-		<Configuration Name="Release|Win32">
+		<Configuration Name="Release|Win32" OutputDirectory="D:\git\swat-eclipse\SWAT_SQLite_Interface\swat_exes" TargetName="swatc_sqlite">
 				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" RuntimeLibrary="rtMultiThreadedDebug"/>
 				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" SubSystem="subSystemConsole"/>
 				<Tool Name="VFResourceCompilerTool"/>
