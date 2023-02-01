@@ -58,7 +58,7 @@
         !pdvas(41) = grazp,pdvas(42) = cfertn, pdvas(43) = cfertp, pdvas(44) = no3pcp        
               " NFIXkg_ha","  NUPkg_ha","  PUPkg_ha"," DNITkg_ha",     &!48
         !pdvas(45) = fixn, pdvas(46) = nplnt(j), pdvas(47) = pplnt(j) , pdvas(48) = wdntl
-              "  NSQkg_ha","  NLQkg_ha"," TNO3kg_ha","  NGWkg_ha",     &!52
+              "  NSQkg_ha","  NLQkg_ha","TNO3kg_ha1","  NGWkg_ha",     &!52
         !pdvas(49) = surqno3(j),pdvas(50) = latno3(j), pdvas(51) = tileno3(j), pdvas(52) = no3gw(j)   
 	      " NO3Lkg_ha","  NRgkg_ha"," NReVkg_ha"," NSepkg_ha",     &!56
 	    !pdvas(53) = percn(j), pdvas(54) = rchrg_n(j), pdvas(55) = revapn(j), pdvas(56) = gwseepn(j)    
@@ -80,7 +80,7 @@
         !pdvas(80) = N2O(j)*1000., pdvas(81) = NO(j)*1000., pdvas(82) = nh4_vol(j), pdvas(83) = no3_denit(j)                                         
               " NITNkg_ha"," UNO3kg_ha"," FNO3kg_ha"," FNH4kg_ha",	&!87
         !pdvas(84) = no3_nitr(j), pdvas(85) = no3_up(j), pdvas(86) = no3_fert(j)+ no3_conf(j) +no3_grazf(j)+ no3_autof(j),pdvas(87) = nh4_fert(j)+ nh4_conf(j) + nh3_grazf(j)+ nh4_autof(j)
-              " FRONkg_ha"," TNO3kg_ha"," TNH3kg_ha","   TONt_ha",	&!91
+              " FRONkg_ha","TNO3kg_ha2"," TNH3kg_ha","   TONt_ha",	&!91
         !pdvas(88) = orgn_fert(j)+ orgn_grazf(j)+ OrgN_Plt2Rsd (j),pdvas(89) = solc_no3(j),pdvas(90) = solc_nh4(j),pdvas(91) = solc_orgn(j)/1000.  
               "  S_OPt_ha","  S_OCt_ha"," S_OSCt_ha"," SedCkg_ha", 	&!95
         !pdvas(92) = solc_orgp(j)/1000.,pdvas(93) = solc_orgc(j)/1000.,pdvas(94) = solc_orgcs(j)/1000.,pdvas(95) = sedc_d(j) 
@@ -92,7 +92,7 @@
         !pdvas(104) = HRU_RDOC(j) ,pdvas(105) = HRU_LDOC(j),pdvas(106) = HRU_DIC(j) ,pdvas(107) = SurQ_DOC(j) 
               "LDOCkg_ha2"," PDOCkg_ha"," GDOCkg_ha"," SDICkg_ha",	&!111
         !pdvas(108) = LatQT_DOC(j),pdvas(109) = PerQB_DOC(j), pdvas(110) = GwQ_DOC(j),pdvas(111) = SurQ_DIC(j)
-              " LDICkg_ha"," GDICkg_ha"," TDOCkg_ha"," TDICkg_ha",	&!115
+              " LDICkg_ha","GDICkg_ha1"," TDOCkg_ha"," TDICkg_ha",	&!115
         !pdvas(112) = LatQT_DIC(j), pdvas(113) = PerQB_DIC(j),pdvas(114) = solc_doc(j),pdvas(115) = solc_dic(j) 
               "  SurTempC"," SolT50cmC","  ST100cmC","  ST150cmC",  	&!119
         !pdvas(116) = sur_tmp(j), pdvas(117) = soltmp_50(j), pdvas(118) = soltmp_100(j), pdvas(119) = soltmp_150(j) 
@@ -106,7 +106,7 @@
         !pdvas(132) = shallst_don_decay(j) ,pdvas(133) = revap_don(j),pdvas(134) = gwseep_don(j),pdvas(135) = shallst_don(j)       
               " rcDOCkg_h"," dcDOCkg_h"," rvDOCkg_h"," gpDOCkg_h", 	&!139
         !pdvas(136) = rchrg_doc(j),pdvas(137) = shallst_doc_decay(j), pdvas(138) = revap_doc(j),pdvas(139) = gwseep_doc(j)        
-              " shaDOCkgh"," GDICkg_ha"," rcDICkg_h"," rvDICkg_h",	&!143
+              " shaDOCkgh","GDICkg_ha2"," rcDICkg_h"," rvDICkg_h",	&!143
         !pdvas(140) = shallst_doc(j), pdvas(141) = GwQ_DIC(j), pdvas(142) = rchrg_dic(j), pdvas(143) = revap_dic(j)         
               " gpDICkg_h"," shaDICkgh","  SOC1t_ha","  SOC2t_ha",	&!147
         !pdvas(144) = gwseep_dic(j), pdvas(145) = shallst_dic(j), pdvas(146) = sol_soc(1,j), pdvas(147) = sol_soc(2,j)
